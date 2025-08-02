@@ -1,3 +1,6 @@
-ultralytics
+ultralytics==8.0.147
+opencv-python-headless
 ffmpeg-python
 requests
+numpy
+Add requirements.txt for RunPod
