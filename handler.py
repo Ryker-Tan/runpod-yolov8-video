@@ -1,4 +1,5 @@
 from runpod.serverless.modules.rp_logger import RunPodLogger
+from runpod.serverless.modules.rp_handler import runpod_handler
 import ffmpeg
 import requests
 from ultralytics import YOLO
@@ -15,7 +16,7 @@ def handler(event):
 
     ffmpeg.input(video_path).output("/tmp/frame.jpg", vframes=1).run()
 
-    model = YOLO("https://universe.roboflow.com/ryker-tan/rykers-sprint-coach/2?model=best.pt&api_key=4kp6KEqeVLWBWEO3ciKC")  # Or your custom model if uploaded to RunPod
+    model = YOLO("https://universe.roboflow.com/ryker-tan/rykers-sprint-coach/2?model=best.pt&api_key=4kp6KEqeVLWBWEO3ciKC")
     results = model(video_path)
 
     output = []
@@ -30,3 +31,6 @@ def handler(event):
             })
 
     return { "output": output }
+
+# 🔥 This is required for serverless to work properly
+runpod_handler(handler)
