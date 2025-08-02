@@ -1,36 +1,47 @@
-from runpod.serverless.modules.rp_logger import RunPodLogger
-from runpod.serverless.modules.rp_handler import runpod_handler
-import ffmpeg
-import requests
+import runpod
+import subprocess
 from ultralytics import YOLO
+import os
+import requests
 
-logger = RunPodLogger()
+# Load your YOLOv8 model from weights
+model = YOLO("weights.pt")
+
+def download_file(url, local_path):
+    response = requests.get(url, stream=True)
+    with open(local_path, "wb") as f:
+        for chunk in response.iter_content(chunk_size=8192):
+            f.write(chunk)
+
+def extract_frame(video_path, frame_path):
+    subprocess.run([
+        "ffmpeg", "-i", video_path,
+        "-vf", "fps=1", "-frames:v", "1", frame_path
+    ], check=True)
 
 def handler(event):
     video_url = event["input"]["video_url"]
+
+    # Step 1: Download video
     video_path = "/tmp/input.mp4"
+    frame_path = "/tmp/frame.jpg"
+    download_file(video_url, video_path)
 
-    r = requests.get(video_url)
-    with open(video_path, "wb") as f:
-        f.write(r.content)
+    # Step 2: Extract one frame using ffmpeg
+    extract_frame(video_path, frame_path)
 
-    ffmpeg.input(video_path).output("/tmp/frame.jpg", vframes=1).run()
+    # Step 3: Run YOLOv8 inference on the frame
+    results = model(frame_path)
 
-    model = YOLO("weights.pt")
-    results = model(video_path)
+    detections = []
+    for box in results[0].boxes:
+        b = box.xyxy[0].tolist()  # [x1, y1, x2, y2]
+        c = int(box.cls[0])       # class id
+        conf = float(box.conf[0]) # confidence
+        detections.append({
+            "bbox": b,
+            "class": int(c),
+            "confidence": conf
+        })
 
-    output = []
-    for r in results:
-        for box in r.boxes:
-            output.append({
-                "x": int(box.xyxy[0][0]),
-                "y": int(box.xyxy[0][1]),
-                "width": int(box.xyxy[0][2] - box.xyxy[0][0]),
-                "height": int(box.xyxy[0][3] - box.xyxy[0][1]),
-                "label": r.names[int(box.cls[0])],
-            })
-
-    return { "output": output }
-
-# 🔥 This is required for serverless to work properly
-runpod_handler(handler)
+    return {"detections": detections}
