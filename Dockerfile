@@ -11,4 +11,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Run handler (change this if your entry file is different)
-CMD ["python3", "handler.py"]
+CMD ["runpod", "serverless", "start"]
