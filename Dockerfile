@@ -1,14 +1,10 @@
-FROM python:3.10-slim
+FROM ultralytics/ultralytics:latest
 
-# Install dependencies
-RUN apt update && apt install -y ffmpeg libgl1
+RUN apt-get update && apt-get install -y ffmpeg
 
-# Copy and install requirements
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY . /app
+WORKDIR /app
 
-# Copy all files in repo
-COPY . .
+RUN pip install -r requirements.txt
 
-# Run handler (change this if your entry file is different)
-CMD ["runpod", "serverless", "start"]
+CMD ["python3", "-m", "runpod"]
