@@ -15,7 +15,7 @@ def handler(event):
 
     ffmpeg.input(video_path).output("/tmp/frame.jpg", vframes=1).run()
 
-    model = YOLO("yolov8n.pt")  # Or your custom model if uploaded to RunPod
+    model = YOLO("https://universe.roboflow.com/ryker-tan/rykers-sprint-coach/2?model=best.pt&api_key=4kp6KEqeVLWBWEO3ciKC")  # Or your custom model if uploaded to RunPod
     results = model(video_path)
 
     output = []
