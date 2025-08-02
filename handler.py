@@ -16,7 +16,7 @@ def handler(event):
 
     ffmpeg.input(video_path).output("/tmp/frame.jpg", vframes=1).run()
 
-    model = YOLO("https://universe.roboflow.com/ryker-tan/rykers-sprint-coach/2?model=best.pt&api_key=4kp6KEqeVLWBWEO3ciKC")
+    model = YOLO("weights.pt")
     results = model(video_path)
 
     output = []
