@@ -1,17 +1,17 @@
 FROM python:3.10
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y ffmpeg
+RUN apt-get update && apt-get install -y ffmpeg libgl1
 
 # Set working directory
 WORKDIR /app
 
-# Copy all code and weights
+# Copy code
 COPY . /app
 
-# Install dependencies
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Runpod template setup
+# RunPod handler setup
 ENV RP_HANDLER=handler
-CMD ["python3", "-m", "runpod"]
+CMD ["python", "-m", "runpod"]
