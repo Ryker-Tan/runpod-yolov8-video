@@ -1,17 +1,15 @@
-FROM python:3.10
+FROM python:3.10-slim
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y ffmpeg libgl1
+RUN apt-get update && apt-get install -y ffmpeg libgl1 curl
 
-# Set working directory
 WORKDIR /app
+COPY handler.py /app/
+COPY requirements.txt /app/
 
-# Copy code
-COPY . /app
-
-# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# RunPod handler setup
+# Download YOLO weights from public link instead of bundling
+RUN curl -o weights.pt https://your-link-to-weights.pt
+
 ENV RP_HANDLER=handler
 CMD ["python", "handler.py"]
