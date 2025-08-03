@@ -4,3 +4,4 @@ opencv-python-headless==4.7.0.72
 ffmpeg-python==0.2.0
 requests==2.31.0
 numpy==1.24.4
+supabase==1.0.3
