@@ -31,7 +31,7 @@ def handler(event):
     extract_frame(video_path, frame_path)
 
     # Step 3: Run YOLOv8 inference on the frame
-    results = model(frame_path)
+    results = model.predict(frame_path)
 
     detections = []
     for box in results[0].boxes:
