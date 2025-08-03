@@ -45,3 +45,6 @@ def handler(event):
         })
 
     return {"detections": detections}
+
+# Start the RunPod serverless function
+runpod.serverless.start({"handler": handler})
