@@ -1,10 +1,17 @@
-FROM ultralytics/ultralytics:latest
+FROM python:3.10
 
+# Install system dependencies
 RUN apt-get update && apt-get install -y ffmpeg
 
-COPY . /app
+# Set working directory
 WORKDIR /app
 
-RUN pip install -r requirements.txt
+# Copy all code and weights
+COPY . /app
 
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Runpod template setup
+ENV RP_HANDLER=handler
 CMD ["python3", "-m", "runpod"]
