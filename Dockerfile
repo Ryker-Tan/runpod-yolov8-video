@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # RunPod handler setup
 ENV RP_HANDLER=handler
-CMD ["python", "-m", "runpod"]
+CMD ["python", "handler.py"]
