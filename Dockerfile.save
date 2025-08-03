@@ -1,0 +1,24 @@
+FROM python:3.10-slim
+
+RUN apt update && apt install -y ffmpeg libgl1 git-lfs
+RUN git lfs install
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+CMD ["runpod", "serverless", "FROM python:3.10-slim
+
+# Install dependencies
+RUN apt update && apt install -y ffmpeg libgl1
+
+# Copy and install requirements
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy all files in repo
+COPY . .
+
+# Run handler (change this if your entry file is different)
+CMD ["runpod", "serverless", "start"]
