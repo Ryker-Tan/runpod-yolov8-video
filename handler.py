@@ -54,7 +54,10 @@ def process_video(video_url):
     # Upload to Supabase
     file_name = os.path.basename(output_path)
     with open(output_path, 'rb') as f:
-        supabase.storage.from_("sprint-clips").upload(file_name, f, {"content-type": "video/mp4"})
+        supabase.storage.from_("sprint-clips").upload(file_name, f, {
+            "content-type": "video/mp4",
+            "cache-control": "max-age=0"
+        }, upsert=True)  # This forces overwrite
 
     public_url = supabase.storage.from_("sprint-clips").get_public_url(file_name)
     return public_url
