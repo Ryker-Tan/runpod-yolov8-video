@@ -13,5 +13,5 @@ COPY . .
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Start the serverless handler
-CMD ["runpod", "serverless", "start"]
+# ✅ Start the RunPod serverless handler correctly
+CMD ["python", "handler.py"]
