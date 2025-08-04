@@ -1,15 +1,17 @@
 FROM python:3.10
 
-RUN apt-get update && apt-get install -y ffmpeg libgl1 curl
+# Install system dependencies
+RUN apt update && apt install -y ffmpeg libgl1 libglib2.0-0
 
+# Set working directory
 WORKDIR /app
-COPY handler.py /app/
-COPY requirements.txt /app/
 
+# Copy files
+COPY . .
+
+# Install Python dependencies
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Download YOLO weights from public link instead of bundling
-RUN curl -o weights.pt https://your-link-to-weights.pt
-
-ENV RP_HANDLER=handler
-CMD ["python", "handler.py"]
+# Start the serverless handler
+CMD ["runpod", "serverless", "start"]
