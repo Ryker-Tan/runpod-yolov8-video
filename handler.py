@@ -2,9 +2,11 @@ import runpod
 import os
 import requests
 import cv2
-from ultralytics import YOLO
 import tempfile
 import shutil
+import torch
+from ultralytics import YOLO
+from ultralytics.nn.tasks import DetectionModel
 from supabase import create_client, Client
 
 print("📦 Starting handler.py")
@@ -15,6 +17,10 @@ SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 print("✅ Supabase client initialized")
+
+# --- Fix PyTorch global unpickling issue ---
+torch.serialization.add_safe_globals([DetectionModel])
+print("✅ Safe globals added for YOLOv8 loading")
 
 # --- Load YOLOv8 model ---
 model = YOLO("weights.pt")
